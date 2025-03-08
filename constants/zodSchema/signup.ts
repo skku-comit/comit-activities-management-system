@@ -1,9 +1,12 @@
 import { z } from 'zod'
 
-import { email, password } from '@/constants/zodSchema/signin'
+import { name, password } from '@/constants/zodSchema/signin'
 
 export const signUpSchema = z.object({
-  username: z.string({ required_error: '필수 입력사항입니다.' }).min(1, '필수 입력사항입니다.'),
+  name,
+  fullname: z.string({ required_error: '필수 입력사항입니다.' }).min(1, '필수 입력사항입니다.'),
+  password,
+  email: z.string({ required_error: '필수 입력사항입니다.' }).email('이메일 형식이 아닙니다.'),
   phoneNumber: z
     .string({ required_error: '핸드폰 번호를 입력해주세요.' })
     .min(11, '핸드폰 번호는 11자리여야 합니다.')
@@ -11,9 +14,7 @@ export const signUpSchema = z.object({
   studentId: z
     .string({ required_error: '필수 입력사항입니다.' })
     .min(10, '학번은 10자리여야 합니다.')
-    .max(10, '학번은 10자리여야 합니다.'),
-  email,
-  password
+    .max(10, '학번은 10자리여야 합니다.')
 })
 
 export const extendedSignUpSchema = signUpSchema.extend({

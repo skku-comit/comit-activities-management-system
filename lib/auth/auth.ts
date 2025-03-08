@@ -21,7 +21,7 @@ const authOptions: NextAuthConfig = {
   providers: [
     Credentials({
       credentials: {
-        username: { label: 'Name', type: 'text' },
+        name: { label: 'Name', type: 'text' },
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' }
       },
@@ -31,7 +31,7 @@ const authOptions: NextAuthConfig = {
        * @returns `null`을 반환하면 로그인 실패, `object`를 반환하면 로그인 성공되어 `jwt` 콜백의 `token`으로 전달됨
        */
       authorize: async (credentials) => {
-        if (credentials.username) {
+        if (credentials.email) {
           const userInfo = await signUpSchema.parseAsync(credentials)
           return _signIn('signup', userInfo)
         }
@@ -43,10 +43,10 @@ const authOptions: NextAuthConfig = {
   callbacks: {
     jwt: async ({ token, user }) => {
       // 토큰 없는 상태(로그인 X)에서 로그인 시도
-      if (user && user.data?.username) {
+      if (user && user.data?.name) {
         return {
           data: {
-            username: user.data.username,
+            name: user.data.name,
             image: user.data.image,
             email: user.data.email,
             role: user.data.role,
@@ -110,7 +110,7 @@ async function refreshAccessToken(refreshToken: string) {
 
   return {
     data: {
-      username: data.username,
+      name: data.name,
       image: data.image,
       email: data.email,
       role: data.role,
@@ -166,7 +166,7 @@ async function _signIn(
   return {
     error: null,
     data: {
-      username: data.username,
+      name: data.name,
       image: data.image,
       email: data.email,
       role: data.role,

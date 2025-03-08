@@ -59,7 +59,7 @@ const JSP_ENDPOINTS = {
     LOGIN: { url: `${baseURL}/${API_PREFIX}/login`, method: 'POST' as HttpMethod },
     LOGOUT: { url: `${baseURL}/${API_PREFIX}/logout`, method: 'POST' as HttpMethod },
     REISSUE: { url: `${baseURL}/${API_PREFIX}/reissue`, method: 'POST' as HttpMethod },
-    SIGNUP: { url: `${baseURL}/${API_PREFIX}/join`, method: 'POST' as HttpMethod }
+    SIGNUP: { url: `${baseURL}/${API_PREFIX}/signup`, method: 'POST' as HttpMethod }
   }
 }
 

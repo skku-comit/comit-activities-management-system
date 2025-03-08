@@ -1,6 +1,5 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
@@ -12,18 +11,18 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { ROUTES } from '@/constants/routes'
-import { extendedSignUpSchema } from '@/constants/zodSchema/signup'
 import { DuplicatedCredentialsErrorCode, InvalidSignupCredentialsErrorCode } from '@/lib/auth/errors'
 import { cn } from '@/lib/utils'
 import Welcome from '@/public/welcome.svg'
 
 export interface FormData {
-  username: string
+  name: string
+  fullName: string
+  password: string
+  confirmPassword: string
   phoneNumber: string
   studentId: string
   email: string
-  password: string
-  confirmPassword: string
   consent: boolean
 }
 
@@ -36,8 +35,8 @@ export default function Signup() {
     watch,
     formState: { errors, isSubmitting }
   } = useForm<FormData>({
-    mode: 'onBlur',
-    resolver: zodResolver(extendedSignUpSchema)
+    mode: 'onBlur'
+    // resolver: zodResolver(extendedSignUpSchema)
   })
   const router = useRouter()
 
@@ -48,21 +47,25 @@ export default function Signup() {
   const [viewPassword, setViewPassword] = useState(false)
   const [viewRetypePassword, setViewRetypePassword] = useState(false)
 
-  const [userName, setuserName] = useState('신규부원')
+  const [fullName, setFullName] = useState('신규부원')
   const [toggle, setToggle] = useState(false)
 
   const onSubmit = async (data: FormData) => {
+    console.log(data)
     const res = await signIn('credentials', {
-      username: data.username,
+      name: data.name,
+      fullName: data.fullName,
+      password: data.password,
       phoneNumber: data.phoneNumber,
       studentId: data.studentId,
       email: data.email,
-      password: data.password,
       redirect: false
     })
 
+    console.log(res)
+
     if (res?.code === DuplicatedCredentialsErrorCode) {
-      ;['username', 'phoneNumber', 'studentId', 'email'].forEach((key) => {
+      ;['name', 'phoneNumber', 'studentId', 'email'].forEach((key) => {
         setError(key as keyof FormData, {
           type: 'manual',
           message: '이미 가입된 회원 정보입니다.'
@@ -76,7 +79,7 @@ export default function Signup() {
       return
     }
     if (res?.code === InvalidSignupCredentialsErrorCode) {
-      ;['username', 'phoneNumber', 'studentId', 'email', 'password', 'confirmPassword'].forEach((key) => {
+      ;['name', 'fullName', 'password', 'phoneNumber', 'studentId', 'email', 'confirmPassword'].forEach((key) => {
         setError(key as keyof FormData, {
           type: 'manual',
           message: '회원가입 정보가 올바르지 않습니다.'
@@ -99,7 +102,7 @@ export default function Signup() {
         <div className="mt-0 flex flex-col gap-0 sm:mt-1 sm:gap-1">
           <div className="flex items-center gap-1 text-[28px] font-normal sm:text-[32px]/[40px]">
             <h3 className="inline-flex items-center">
-              <strong className="font-bold text-primary">{userName}</strong>님 반가워요
+              <strong className="font-bold text-primary">{fullName}</strong>님 반가워요
             </h3>
             <Image src={Welcome} alt="Welcome" className="-mt-1 h-8 w-8 sm:-mt-1.5 sm:h-9 sm:w-9" />
           </div>
@@ -113,29 +116,47 @@ export default function Signup() {
               <div className="flex flex-col content-start gap-y-0 sm:flex-row sm:gap-y-6">
                 <label className="relative box-border w-24 pb-1 pt-2 text-[14px] font-normal text-[#171717] sm:min-w-[120px] sm:py-3 sm:text-base">
                   이름(실명)&nbsp;
-                  <span className="inline-block text-destructive">*</span>
+                  <span className="inline-block text-red-500">*</span>
                 </label>
                 <div className="flex flex-grow flex-col gap-y-1 sm:gap-y-2">
                   <input
-                    {...register('username', {
-                      onBlur: () => setuserName(getValues().username)
+                    {...register('fullName', {
+                      onBlur: () => setFullName(getValues().fullName)
                     })}
                     placeholder="실명을 입력해주세요"
                     className={cn(
                       'box-border rounded-lg border border-solid border-[#d2d2d2] py-3 pl-3 pr-4 align-middle text-xs tracking-normal outline-none sm:w-full sm:pl-4 sm:text-sm/[22px]',
-                      errors.username && 'border-2 border-destructive'
+                      errors.fullName && 'border-2 border-red-500'
                     )}
                   />
-                  {errors.username && (
-                    <p className="block text-xs text-destructive sm:text-xs/[18px]">{errors.username.message}</p>
+                  {errors.fullName && (
+                    <p className="block text-xs text-red-500 sm:text-xs/[18px]">{errors.fullName.message}</p>
                   )}
                 </div>
               </div>
 
               <div className="flex flex-col content-start gap-y-0 sm:flex-row sm:gap-y-6">
                 <label className="relative box-border w-24 pb-1 pt-2 text-[14px] font-normal text-[#171717] sm:min-w-[120px] sm:py-3 sm:text-base">
+                  아이디&nbsp;
+                  <span className="inline-block text-red-500">*</span>
+                </label>
+                <div className="flex flex-grow flex-col gap-y-1 sm:gap-y-2">
+                  <input
+                    {...register('name')}
+                    placeholder="아이디 입력"
+                    className={cn(
+                      'box-border w-full rounded-lg border border-solid border-[#d2d2d2] py-3 pl-3 pr-4 align-middle text-xs tracking-normal outline-none sm:pl-4 sm:text-sm/[22px]',
+                      errors.name && 'border-2 border-red-500'
+                    )}
+                  />
+                  {errors.name && <p className="block text-xs text-red-500 sm:text-xs/[18px]">{errors.name.message}</p>}
+                </div>
+              </div>
+
+              <div className="flex flex-col content-start gap-y-0 sm:flex-row sm:gap-y-6">
+                <label className="relative box-border w-24 pb-1 pt-2 text-[14px] font-normal text-[#171717] sm:min-w-[120px] sm:py-3 sm:text-base">
                   휴대폰번호&nbsp;
-                  <span className="inline-block text-destructive">*</span>
+                  <span className="inline-block text-red-500">*</span>
                 </label>
                 <div className="flex flex-grow flex-col gap-y-1 sm:gap-y-2">
                   <Input
@@ -143,11 +164,11 @@ export default function Signup() {
                     placeholder="휴대폰 번호 입력 ('-' 제외 11자리)"
                     className={cn(
                       'box-border h-max w-full rounded-lg border border-solid border-[#d2d2d2] py-3 pl-3 pr-4 align-middle text-xs tracking-normal outline-none sm:pl-4 sm:text-sm/[22px] ',
-                      errors.phoneNumber && 'border-2 border-destructive'
+                      errors.phoneNumber && 'border-2 border-red-500'
                     )}
                   />
                   {errors.phoneNumber && (
-                    <p className="block text-xs text-destructive sm:text-xs/[18px]">{errors.phoneNumber.message}</p>
+                    <p className="block text-xs text-red-500 sm:text-xs/[18px]">{errors.phoneNumber.message}</p>
                   )}
                 </div>
               </div>
@@ -155,7 +176,7 @@ export default function Signup() {
               <div className="flex flex-col content-start gap-y-0 sm:flex-row sm:gap-y-6">
                 <label className="relative box-border w-24 pb-1 pt-2 text-[14px] font-normal text-[#171717] sm:min-w-[120px] sm:py-3 sm:text-base">
                   학번&nbsp;
-                  <span className="inline-block text-destructive">*</span>
+                  <span className="inline-block text-red-500">*</span>
                 </label>
                 <div className="flex flex-grow flex-col gap-y-1 sm:gap-y-2">
                   <input
@@ -163,11 +184,11 @@ export default function Signup() {
                     placeholder="학번 입력 (숫자 10자)"
                     className={cn(
                       'box-border w-full rounded-lg border border-solid border-[#d2d2d2] py-3 pl-3 pr-4 align-middle text-xs tracking-normal outline-none sm:pl-4 sm:text-sm/[22px]',
-                      errors.studentId && 'border-2 border-destructive'
+                      errors.studentId && 'border-2 border-red-500'
                     )}
                   />
                   {errors.studentId && (
-                    <p className="block text-xs text-destructive sm:text-xs/[18px]">{errors.studentId.message}</p>
+                    <p className="block text-xs text-red-500 sm:text-xs/[18px]">{errors.studentId.message}</p>
                   )}
                 </div>
               </div>
@@ -175,7 +196,7 @@ export default function Signup() {
               <div className="flex flex-col content-start gap-y-0 sm:flex-row sm:gap-y-6">
                 <label className="relative box-border w-24 pb-1 pt-2 text-[14px] font-normal text-[#171717] sm:min-w-[120px] sm:py-3 sm:text-base">
                   이메일&nbsp;
-                  <span className="inline-block text-destructive">*</span>
+                  <span className="inline-block text-red-500">*</span>
                 </label>
                 <div className="flex flex-grow flex-col gap-y-1 sm:gap-y-2">
                   <div className="flex flex-grow items-center gap-x-2">
@@ -184,12 +205,12 @@ export default function Signup() {
                       placeholder="이메일 주소 입력 (로그인용)"
                       className={cn(
                         'box-border w-full rounded-lg border border-solid border-[#d2d2d2] py-3 pl-3 pr-4 align-middle text-xs tracking-normal outline-none sm:pl-4 sm:text-sm/[22px]',
-                        errors.email && 'border-2 border-destructive'
+                        errors.email && 'border-2 border-red-500'
                       )}
                     />
                   </div>
                   {errors.email && (
-                    <p className="block text-xs text-destructive sm:text-xs/[18px]">{errors.email.message}</p>
+                    <p className="block text-xs text-red-500 sm:text-xs/[18px]">{errors.email.message}</p>
                   )}
                 </div>
               </div>
@@ -197,7 +218,7 @@ export default function Signup() {
               <div className="flex flex-col content-start gap-y-0 sm:flex-row sm:gap-y-6">
                 <label className="relative box-border w-24 pb-1 pt-2 text-[14px] font-normal text-[#171717] sm:min-w-[120px] sm:py-3 sm:text-base">
                   비밀번호&nbsp;
-                  <span className="inline-block text-destructive">*</span>
+                  <span className="inline-block text-red-500">*</span>
                 </label>
                 <div className="relative flex flex-grow flex-col gap-y-1 sm:gap-y-2">
                   <input
@@ -206,7 +227,7 @@ export default function Signup() {
                     type={viewPassword ? 'text' : 'password'}
                     className={cn(
                       'box-border w-full rounded-lg border border-solid border-[#d2d2d2] py-3 pl-3 pr-4 align-middle text-xs tracking-normal outline-none sm:pl-4 sm:text-sm/[22px]',
-                      errors.password && 'border-2 border-destructive'
+                      errors.password && 'border-2 border-red-500'
                     )}
                   />
                   {typeof watchPassword !== 'undefined' && watchPassword !== '' && (
@@ -222,7 +243,7 @@ export default function Signup() {
                   )}
 
                   {errors.password && (
-                    <p className="block text-xs text-destructive sm:text-xs/[18px]">{errors.password.message}</p>
+                    <p className="block text-xs text-red-500 sm:text-xs/[18px]">{errors.password.message}</p>
                   )}
                 </div>
               </div>
@@ -230,7 +251,7 @@ export default function Signup() {
               <div className="flex flex-col content-start gap-y-0 sm:flex-row sm:gap-y-6">
                 <label className="relative box-border w-24 pb-1 pt-2 text-[14px] font-normal text-[#171717] sm:min-w-[120px] sm:py-3 sm:text-base">
                   비밀번호 확인&nbsp;
-                  <span className="inline-block text-destructive">*</span>
+                  <span className="inline-block text-red-500">*</span>
                 </label>
                 <div className="relative flex flex-grow flex-col gap-y-1 sm:gap-y-2">
                   <input
@@ -243,7 +264,7 @@ export default function Signup() {
                       'box-border w-full rounded-lg border border-solid border-[#d2d2d2] py-3 pl-3 pr-4 align-middle text-xs tracking-normal outline-none sm:pl-4 sm:text-sm/[22px]',
                       (errors.confirmPassword ||
                         (watchPassword !== watchConfirmPassword && isConfirmPasswordBlurred)) &&
-                        'border-2 border-destructive'
+                        'border-2 border-red-500'
                     )}
                   />
                   {typeof watchConfirmPassword !== 'undefined' && watchConfirmPassword !== '' && (
@@ -258,10 +279,10 @@ export default function Signup() {
                     </button>
                   )}
                   {errors.confirmPassword && watchConfirmPassword == '' && (
-                    <p className="block text-xs text-destructive sm:text-xs/[18px]">{errors.confirmPassword.message}</p>
+                    <p className="block text-xs text-red-500 sm:text-xs/[18px]">{errors.confirmPassword.message}</p>
                   )}
                   {watchPassword !== watchConfirmPassword && watchConfirmPassword && isConfirmPasswordBlurred && (
-                    <p className="block text-xs text-destructive sm:text-xs/[18px]">동일한 비밀번호를 입력해주세요.</p>
+                    <p className="block text-xs text-red-500 sm:text-xs/[18px]">동일한 비밀번호를 입력해주세요.</p>
                   )}
                 </div>
               </div>
@@ -305,7 +326,7 @@ export default function Signup() {
               </label>
             </div>
             <div className="block">
-              {errors.consent && <p className="text-xs/[18px] text-destructive">{errors.consent.message}</p>}
+              {errors.consent && <p className="text-xs/[18px] text-red-500">{errors.consent.message}</p>}
             </div>
             {toggle && (
               <div className="mt-2 box-border w-full rounded-lg bg-[#fff] p-2 text-[10px]/[15px] sm:mt-4 sm:p-4 sm:text-[12px]/[20px]">

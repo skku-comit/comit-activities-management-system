@@ -17,7 +17,7 @@ import { InvalidSigninErrorCode } from '@/lib/auth/errors'
 import ComitOwl from '@/public/comitOwl.png'
 
 interface LoginForm {
-  email: string
+  name: string
   password: string
 }
 
@@ -37,19 +37,21 @@ export default function Login() {
   // TODO: 에러 핸들링 코드 작성
   const onSubmit = async (data: LoginForm) => {
     const res = await signIn('credentials', {
-      email: data.email,
+      name: data.name,
       password: data.password,
       redirect: false
     })
 
+    console.log(res)
+
     if (res?.code === InvalidSigninErrorCode) {
-      setError('email', {
+      setError('name', {
         type: 'manual',
-        message: '이메일 또는 비밀번호가 일치하지 않습니다.'
+        message: '아이디 또는 비밀번호가 일치하지 않습니다.'
       })
       setError('password', {
         type: 'manual',
-        message: '이메일 또는 비밀번호가 일치하지 않습니다.'
+        message: '아이디 또는 비밀번호가 일치하지 않습니다.'
       })
       return
     }
@@ -66,14 +68,9 @@ export default function Login() {
         <Image src={ComitOwl} alt="comit_owl" width={164} />
         <p className="mb-6 text-center text-xl font-semibold sm:mb-12 sm:text-3xl">회원 로그인</p>
         <div className="flex w-full flex-col gap-1">
-          <p className="text-xl">이메일</p>
-          <Input
-            id="email"
-            {...register('email')}
-            className="h-12 rounded-xl border border-[#d2d2d2] bg-transparent sm:h-14"
-            type="email"
-          />
-          {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+          <p className="text-xl">아이디</p>
+          <Input id="name" {...register('name')} />
+          {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
         </div>
         <div className="flex w-full flex-col gap-1">
           <p className="text-xl">비밀번호</p>
