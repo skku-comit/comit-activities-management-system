@@ -3,6 +3,9 @@ import './globals.css'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 
+import Sidebar from '@/components/Sidebar'
+import TopBanner from '@/components/TopBanner'
+import { SidebarProvider } from '@/contexts/SidebarContext'
 import { SessionProvider } from '@/lib/auth/SessionProvider'
 import { cn } from '@/lib/utils'
 
@@ -14,26 +17,11 @@ const pretendard = localFont({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://skku-comit.dev'),
-  title: 'COMIT',
-  description: 'SKKU COMIT official website',
+  title: '코밋 활동관리시스템',
+  description: 'Comit Activities Management System',
   icons: {
     icon: '/favicon.ico',
     apple: '/favicon.ico'
-  },
-  openGraph: {
-    title: 'COMIT - SKKU COMIT Official Website',
-    description: 'SKKU COMIT official website',
-    images: [
-      {
-        url: 'https://github.com/skku-comit/comit-website/assets/97675977/deb60102-16d9-41b0-aa16-12d517f20812',
-        width: 1200,
-        height: 630,
-        alt: 'COMIT Banner Image'
-      }
-    ],
-    url: 'https://skku-comit.dev',
-    type: 'website'
   },
   keywords: ['SKKU', 'COMIT', 'Official'],
   robots: 'index, follow'
@@ -47,7 +35,17 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={cn(pretendard.variable, 'font-pretendard')}>
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <SidebarProvider>
+            <div className="flex min-h-screen">
+              <Sidebar />
+              <div className="flex-1 md:ml-[min(256px,25vw)]">
+                <TopBanner />
+                <main className="mt-16 p-4 md:p-6 lg:p-8">{children}</main>
+              </div>
+            </div>
+          </SidebarProvider>
+        </SessionProvider>
       </body>
     </html>
   )

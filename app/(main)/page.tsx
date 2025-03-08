@@ -1,185 +1,160 @@
-import Image from 'next/image'
+'use client'
+
 import Link from 'next/link'
-import React from 'react'
-import { Suspense } from 'react'
-import { BsChevronCompactDown } from 'react-icons/bs'
-import { FaAngleRight } from 'react-icons/fa6'
 
-import LoadingSpinner from '@/components/common/LoadingSpinner'
-import { Motion } from '@/components/common/MotionWrapper'
-import ExampleStudyList from '@/components/main/ExampleStudyList'
-import { MainCarousel } from '@/components/main/MainCarousel'
-import { Button } from '@/components/ui/button'
-import { ROUTES } from '@/constants/routes'
-import { fadeIn } from '@/lib/animations'
-import mainPicture from '@/public/mainPicture.svg'
-
-const mainIntroduceTextFirstLine: Array<string> = ['개발자', '를 꿈꾸는']
-const mainIntroduceTextSecondLine: Array<string> = ['모든 ', '학생', '들을 ', '위해서']
-const subIntroduceTextFirstLine: Array<string> = ['자유롭게 ', '지식을 ', '공유하고 ', '개발할 ', '수 ', '있는']
-const subIntroduceTextSecondLine: Array<string> = ['성균관대학교 ', '중앙 ', '코딩 ', '동아리']
-const aboutData: { description: string; number: number }[] = [
-  {
-    description: '누적 스터디 개설',
-    number: 70
-  },
-  {
-    description: '평균 신규 지원',
-    number: 80
-  },
-  {
-    description: '평균 스터디 개설',
-    number: 10
-  }
-]
-
-const Home = () => {
-  const renderAnimatedText = (text: Array<string>) => {
-    return text.map((item: string, index: number) => {
-      if (item === '개발자' || item === '학생') {
-        return (
-          <Motion key={index} tag="span" animation={fadeIn(1, index / 5)} className="text-primary">
-            {item}
-          </Motion>
-        )
-      } else {
-        return (
-          <Motion key={index} tag="span" animation={fadeIn(1, index / 10)}>
-            {item}
-          </Motion>
-        )
-      }
-    })
-  }
-
+export default function HomePage() {
   return (
-    <div className="flex w-full flex-col items-center text-center">
-      <div className="container">
-        <div className="relative flex h-[90vh] items-start justify-center md:items-center">
-          <div className="flex items-center justify-between max-lg:flex-col lg:flex-row-reverse">
-            <Motion animation={fadeIn()} className="flex justify-center">
-              <Image
-                src={mainPicture}
-                width={600}
-                height={600}
-                alt="mainPicture"
-                className="h-[600px] w-[600px] max-xl:h-[400px] max-xl:w-[400px] max-sm:mb-6 max-sm:h-[76vw] max-sm:w-[90%]"
-                priority
-              />
-            </Motion>
-            <div className="flex flex-col gap-6 max-sm:items-center xl:gap-8">
-              <span className="break-keep text-left text-[9vw] font-semibold leading-tight sm:text-[40px] lg:text-[44px] xl:text-[64px]">
-                {renderAnimatedText(mainIntroduceTextFirstLine)}
-                <br />
-                {renderAnimatedText(mainIntroduceTextSecondLine)}
-              </span>
-              <span className="break-keep text-center text-[6vw] font-semibold sm:text-left sm:text-[24px]">
-                <span className="leading-10 max-sm:hidden">{renderAnimatedText(subIntroduceTextFirstLine)}</span>
-                <span className="sm:hidden" />
-                <br className="max-sm:hidden" />
-                {renderAnimatedText(subIntroduceTextSecondLine)}
-              </span>
-              <div className="w-full">
-                <div className="flex items-center justify-between sm:justify-between lg:justify-normal lg:gap-16">
-                  <p className="text-left text-4xl font-semibold leading-[70px] text-primary xl:text-[70px]">
-                    {renderAnimatedText(['C', 'O', 'M', 'I', 'T'])}
-                  </p>
-                  {/* Todo: 동아리 신청 기간을 백엔드로 부터 받아, disabled 기간을 설정 */}
-                  <Motion animation={fadeIn()}>
-                    <Button
-                      disabled
-                      className="h-12 w-40 rounded-2xl border-none text-xl font-semibold lg:h-[60px] lg:w-[190px] lg:text-[24px]"
-                    >
-                      <Link href={ROUTES.SIGNUP.url}>신규 지원</Link>
-                    </Button>
-                  </Motion>
-                </div>
-              </div>
+    <div className="mx-auto max-w-6xl space-y-8 md:space-y-12">
+      {/* 환영 섹션 */}
+      <div className="p-4 md:p-6">
+        <h1 className="mb-3 text-xl font-bold md:text-2xl">박코딩님 환영합니다! 👋</h1>
+        <div className="space-y-3">
+          <p className="break-keep text-[14px] leading-relaxed text-gray-600 md:text-[15px]">
+            <span className="font-medium text-primary">COMIT</span>은 코딩을 처음 시작하는 분들부터 실무 경험이 있는
+            분들까지,
+            <br className="hidden md:block" />
+            모든 수준의 개발자들이 함께하며 성장하는 커뮤니티입니다.
+          </p>
+          <div className="flex flex-wrap gap-2 md:gap-3">
+            <div className="flex items-center gap-2 rounded-full bg-[#E8EDE4] px-3 py-1.5 text-[13px] text-gray-600 md:text-[14px]">
+              <span>👥 선배들과의 멘토링</span>
+            </div>
+            <div className="flex items-center gap-2 rounded-full bg-[#E8EDE4] px-3 py-1.5 text-[13px] text-gray-600 md:text-[14px]">
+              <span>🙌 기억에 남는 스터디 경험</span>
+            </div>
+            <div className="flex items-center gap-2 rounded-full bg-[#E8EDE4] px-3 py-1.5 text-[13px] text-gray-600 md:text-[14px]">
+              <span>🤝 교내 개발자 네트워킹</span>
             </div>
           </div>
-          <div className="absolute bottom-4 flex w-full justify-center sm:bottom-0">
-            <Motion
-              animation={{
-                initial: { opacity: 0 },
-                animate: { opacity: [1, 0.6, 1] },
-                transition: { duration: 2, repeat: Infinity }
-              }}
-            >
-              <Motion
-                animation={{
-                  initial: { opacity: 1 },
-                  whileInView: { opacity: 0 },
-                  transition: { duration: 0.25 }
-                }}
-              >
-                <BsChevronCompactDown size={84} />
-              </Motion>
-            </Motion>
-          </div>
         </div>
-        <div className="flex flex-col max-sm:-mt-16">
-          <Motion
-            animation={{
-              initial: { opacity: 0, y: 100 },
-              whileInView: { opacity: 1, y: 0 },
-              viewport: { once: true },
-              transition: {
-                duration: 0.25
-              }
-            }}
+      </div>
+
+      {/* 활동 섹션 */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+        <Link href="/courses" className="group">
+          <div className="h-full rounded-lg bg-white p-6 shadow-lg transition-shadow hover:shadow-xl">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">스터디/세션 참여하기</h2>
+              <span className="text-2xl">📚</span>
+            </div>
+            <p className="mb-4 break-keep text-[13px] text-gray-600">
+              현재 모집 중인 스터디와 세션을 확인하고 참여해보세요. 초급부터 고급까지 다양한 난이도의 프로그램이
+              준비되어 있습니다.
+            </p>
+            <span className="group-hover:text-primary-dark flex items-center gap-1 text-[13px] text-primary">
+              참여 가능한 활동 보기
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </span>
+          </div>
+        </Link>
+
+        <Link href="/my-activities" className="group">
+          <div className="h-full rounded-lg bg-white p-6 shadow-lg transition-shadow hover:shadow-xl">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">내 활동 관리</h2>
+              <span className="text-2xl">🎯</span>
+            </div>
+            <p className="mb-4 break-keep text-[13px] text-gray-600">
+              참여 중인 활동의 진행 상황을 확인하고 팀원들과 소통하세요. 주차별 커리큘럼 관리와 게시판 기능을
+              제공합니다.
+            </p>
+            <span className="group-hover:text-primary-dark flex items-center gap-1 text-[13px] text-primary">
+              내 활동 확인하기
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </span>
+          </div>
+        </Link>
+      </div>
+
+      {/* 추가 기능 섹션 */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+        <div className="rounded-lg bg-white p-6 shadow-lg">
+          <div className="mb-3 flex items-center gap-3">
+            <span className="text-2xl">🏢</span>
+            <h2 className="text-[15px] font-medium">시설 이용</h2>
+          </div>
+          <p className="mb-3 break-keep text-[13px] text-gray-600">동아리방 예약 및 이용이 가능합니다.</p>
+          <a
+            href="https://www.skku.edu/skku/about/campusInfo/campusMap.do?category=sisulList&campusCd=2&kind=0104&buildNo=20104106"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-2 flex items-center gap-1 text-[12px] text-gray-500 hover:text-primary hover:underline"
           >
-            <p className="mb-8 text-center text-5xl text-[70px] font-semibold max-xl:hidden lg:text-left">About</p>
-          </Motion>
-          <div className="flex justify-center gap-x-16 font-semibold max-lg:flex-col xl:justify-between">
-            {aboutData.map((about, index) => (
-              <Motion
-                key={about.description}
-                animation={{
-                  initial: { opacity: 0, y: 100 },
-                  whileInView: { opacity: 1, y: 0 },
-                  viewport: { once: true },
-                  transition: { duration: 1, ease: [0.6, -0.05, 0.01, 0.9], delay: index * 0.5 }
-                }}
-              >
-                <p className="text-[40px]">{about.description}</p>
-                <p className="text-left text-[90px] max-lg:mb-12 max-lg:text-center">{about.number}+</p>
-              </Motion>
-            ))}
-          </div>
+            <span>위치: 자연과학캠퍼스 학생회관 20x호</span>
+            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+          </a>
+          <Link href="/facilities" className="hover:text-primary-dark flex items-center gap-1 text-[13px] text-primary">
+            예약하기
+            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
         </div>
-        <div className="mt-48 flex justify-center xl:mt-72">
-          <div className="w-full font-semibold">
-            <p className="text-left text-[70px] max-xl:hidden">Study</p>
-            <p className="items-start text-left text-[40px] max-xl:text-center">다뤄진 기술 스택</p>
-            <MainCarousel />
+
+        <div className="rounded-lg bg-white p-6 shadow-lg">
+          <div className="mb-3 flex items-center gap-3">
+            <span className="text-2xl">📚</span>
+            <h2 className="text-[15px] font-medium">도서 대출</h2>
           </div>
+          <p className="mb-3 break-keep text-[13px] text-gray-600">다양한 IT 관련 도서를 대출할 수 있습니다.</p>
+          <Link href="/books" className="hover:text-primary-dark flex items-center gap-1 text-[13px] text-primary">
+            도서 목록 보기
+            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
         </div>
-        <div className="mt-[50px] flex justify-between xl:mt-32">
-          <div className="flex w-full flex-col font-semibold max-xl:items-center">
-            <div className="flex items-center justify-between">
-              <p className="text-left text-[40px] max-xl:text-center">개설된 스터디</p>
-              <Button
-                variant="outline"
-                className="h-9 w-28 rounded-md border-none text-base text-black max-xl:hidden"
-                asChild
-              >
-                <Link href="/study">더보기</Link>
-              </Button>
-            </div>
-            <Suspense fallback={<LoadingSpinner />}>
-              <ExampleStudyList />
-            </Suspense>
-            <Button className="relative my-12 w-64 border-none py-6 text-lg font-semibold xl:hidden" asChild>
-              <Link href="/study">
-                스터디 더보기
-                <FaAngleRight className="absolute right-12" />
-              </Link>
-            </Button>
+
+        <div className="rounded-lg bg-white p-6 shadow-lg">
+          <div className="mb-3 flex items-center gap-3">
+            <span className="text-2xl">📢</span>
+            <h2 className="text-[15px] font-medium">공지사항</h2>
           </div>
+          <p className="mb-3 break-keep text-[13px] text-gray-600">동아리 활동 관련 주요 공지를 확인하세요.</p>
+          <Link href="/notices" className="hover:text-primary-dark flex items-center gap-1 text-[13px] text-primary">
+            공지사항 보기
+            <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+      </div>
+
+      {/* 통계 섹션 */}
+      <div className="py-6 text-center md:py-8">
+        <h2 className="mb-2 text-lg font-bold md:text-xl">코밋은 지금까지...</h2>
+        <p className="text-[13px] leading-relaxed text-gray-600 md:text-[14px]">
+          20xx년부터 시작된 코밋은 매학기 누군가에간 시작을, 또 누군가에겐 발전으로 수많은 구성원들과 함께
+          성장해왔습니다.
+          <br className="hidden md:block" />매 학기 새로운 도전과 함께, 더 나은 교내 스터디 문화를 만들어가고 있어요.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
+        <div className="rounded-lg bg-white p-6 text-center shadow-lg">
+          <p className="mb-2 text-4xl font-bold text-primary">70+</p>
+          <p className="text-[13px] text-gray-600">누적 스터디 개설</p>
+        </div>
+        <div className="rounded-lg bg-white p-6 text-center shadow-lg">
+          <p className="mb-2 text-4xl font-bold text-primary">80+</p>
+          <p className="text-[13px] text-gray-600">평균 신규 지원</p>
+        </div>
+        <div className="rounded-lg bg-white p-6 text-center shadow-lg">
+          <p className="mb-2 text-4xl font-bold text-primary">10+</p>
+          <p className="text-[13px] text-gray-600">평균 스터디 개설</p>
         </div>
       </div>
     </div>
   )
 }
-
-export default Home
