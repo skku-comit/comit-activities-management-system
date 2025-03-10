@@ -1,5 +1,6 @@
 'use client'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
@@ -11,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { ROUTES } from '@/constants/routes'
+import { extendedSignUpSchema } from '@/constants/zodSchema/signup'
 import { DuplicatedCredentialsErrorCode, InvalidSignupCredentialsErrorCode } from '@/lib/auth/errors'
 import { cn } from '@/lib/utils'
 import Welcome from '@/public/welcome.svg'
@@ -35,8 +37,8 @@ export default function Signup() {
     watch,
     formState: { errors, isSubmitting }
   } = useForm<FormData>({
-    mode: 'onBlur'
-    // resolver: zodResolver(extendedSignUpSchema)
+    mode: 'onBlur',
+    resolver: zodResolver(extendedSignUpSchema)
   })
   const router = useRouter()
 
@@ -51,7 +53,6 @@ export default function Signup() {
   const [toggle, setToggle] = useState(false)
 
   const onSubmit = async (data: FormData) => {
-    console.log(data)
     const res = await signIn('credentials', {
       name: data.name,
       fullName: data.fullName,
@@ -61,8 +62,6 @@ export default function Signup() {
       email: data.email,
       redirect: false
     })
-
-    console.log(res)
 
     if (res?.code === DuplicatedCredentialsErrorCode) {
       ;['name', 'phoneNumber', 'studentId', 'email'].forEach((key) => {

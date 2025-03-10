@@ -4,7 +4,7 @@ import { name, password } from '@/constants/zodSchema/signin'
 
 export const signUpSchema = z.object({
   name,
-  fullname: z.string({ required_error: '필수 입력사항입니다.' }).min(1, '필수 입력사항입니다.'),
+  fullName: z.string({ required_error: '필수 입력사항입니다.' }).min(1, '필수 입력사항입니다.'),
   password,
   email: z.string({ required_error: '필수 입력사항입니다.' }).email('이메일 형식이 아닙니다.'),
   phoneNumber: z

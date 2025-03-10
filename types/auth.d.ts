@@ -4,8 +4,6 @@ import { Role } from '@/types'
 export type AuthDataError = CustomError
 export type AuthDataData = {
   name: string
-  image?: string | null // 아직 백엔드에서 반영 안됨
-  email?: string | null // 아직 백엔드에서 반영 안됨
   role: Role
   accessToken: string
   refreshToken: string

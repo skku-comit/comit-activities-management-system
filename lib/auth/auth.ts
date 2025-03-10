@@ -47,8 +47,6 @@ const authOptions: NextAuthConfig = {
         return {
           data: {
             name: user.data.name,
-            image: user.data.image,
-            email: user.data.email,
             role: user.data.role,
             accessToken: user.data.accessToken,
             refreshToken: user.data.refreshToken
@@ -111,8 +109,6 @@ async function refreshAccessToken(refreshToken: string) {
   return {
     data: {
       name: data.name,
-      image: data.image,
-      email: data.email,
       role: data.role,
       accessToken: newAccessToken,
       refreshToken: newRefreshToken
@@ -167,8 +163,6 @@ async function _signIn(
     error: null,
     data: {
       name: data.name,
-      image: data.image,
-      email: data.email,
       role: data.role,
       accessToken: accessToken,
       refreshToken: refreshToken
